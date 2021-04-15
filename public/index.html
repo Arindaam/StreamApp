@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+  
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Web site created using create-react-app"
+    />
+    <title>Video App</title>
+    <script src="https://apis.google.com/js/api.js"></script>
+    <script>
+
+function authenticate() {
+  return gapi.auth2.getAuthInstance()
+      .signIn({scope: "https://www.googleapis.com/auth/youtube.force-ssl"})
+      .then(function() { console.log("Sign-in successful"); },
+            function(err) { console.error("Error signing in", err); });
+}
+window.onload=function loadClient() {
+  gapi.client.setApiKey("AIzaSyAT9vFWEss_ZppI6SIwT0HObBJcsxEAUR8");
+  return gapi.client.load("https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest")
+      .then(function() { console.log("GAPI client loaded for API");
+      authenticate().then(execute);
+      
+    },
+            function(err) { console.error("Error loading GAPI client for API", err); });
+}
+// Make sure the client is loaded and sign-in is complete before calling this method.
+function execute() {
+  return gapi.client.youtube.playlists.list({
+    "part": [
+      "snippet,id"
+    ],
+    "maxResults": 25,
+    "mine": true
+  })
+      .then(function(response) {
+              // Handle the results here (response.result has the parsed body).
+              const Data=response.result.items;
+              
+              
+              sessionStorage.setItem("Data",JSON.stringify(Data));
+               
+              
+              
+              
+              for(var i=0;i<Data.length;i++)
+              {
+                
+                let title;
+              function setTitle()
+              {
+                title=Data[i].snippet.title;
+                console.log(title);
+              } 
+              let button=document.createElement('button');
+              function createButton()
+              {
+               
+                button.innerHTML="Delete Playlist";
+                button.style="width: 200px;height: 20px";
+                button.value=String(Data[i].id);
+              }
+
+                var link;
+                setTitle();
+                createButton();
+                gapi.client.youtube.playlistItems.list({"part": ["contentDetails,snippet" ],"playlistId": String(Data[i].id)}).then(function(response) {
+                  
+                  // var title=response.result.items[0].snippet.title;
+                var thumbnail=response.result.items[0].snippet.thumbnails.default.url;
+                // console.log(Data[i].id);
+                // Handle the results here (response.result has the parsed body).
+                //  console.log("Response", response.result);
+                link="https://www.youtube.com/embed/"+String(response.result.items[0].contentDetails.videoId);
+                // console.log(link);
+
+                
+                var h=document.createElement('H3');                
+                var li=document.createElement("li");
+                var t=document.createTextNode(title);
+                var img = document.createElement('img');
+                img.src =thumbnail;
+                var div=document.createElement('div');
+                var div1=document.createElement('div');
+                div1.appendChild(img);
+                h.appendChild(t);
+                div.appendChild(div1);
+                div.appendChild(h);
+                var a=document.createElement('a');
+                a.appendChild(div);
+                
+                button.onclick=function(){
+
+                  return gapi.client.youtube.playlists.delete({"id": this.value}).then(function(response) {
+                // Handle the results here (response.result has the parsed body).
+                console.log("Response", response);
+                console.log("Deleted "+this.value);
+                  location.reload();
+              },
+              function(err) { console.error("Execute error", err); });
+                  
+                  
+                }
+
+                
+                
+                
+                a.href=link;
+                // console.log("pass");
+                li.appendChild(a);
+                li.appendChild(button);
+
+                document.getElementById('playlists').appendChild(li);
+                
+                
+
+              },
+              function(err) { console.error("Execute error", err); });
+
+              
+              
+              
+
+
+
+                
+                
+                
+              }
+
+            },
+
+            function(err) { console.error("Execute error", err); });
+}
+gapi.load("client:auth2", function() {
+  gapi.auth2.init({client_id: "886447611634-fthjvk6ulgrf3gs4jhpbk9nj6c6ss5nr.apps.googleusercontent.com"});
+});
+
+
+
+
+  function addPlaylist(){
+
+        return gapi.client.youtube.playlists.insert({
+          "part": [
+            "snippet"
+          ],
+          "resource": {
+            "snippet": {
+              "title": String(this["title"].value)
+            }
+          }
+        })
+        .then(function(response) {
+                // Handle the results here (response.result has the parsed body).
+                console.log("Response", response);
+                
+              },
+              function(err) { console.error("Execute error", err); });
+
+    
+  };
+
+    </script>
+  </head>
+  <body style="background-color : black">
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    
+   
+
+
+    
+
+    <div id="root"></div>
+    <h2 style="color:white">Create Playlist</h2>
+    <form action="#" onsubmit="addPlaylist() ; return false">
+      <input type="text" id="title" name="title" value="Enter new PlaylistName"><br><br>
+      <input type="submit" value="Submit">
+    </form>
+    <h1 style="color:white">My Playlists</h1>
+    <ul style="background-color:blue; padding: 10px" id="playlists">
+
+    </ul>
+    
+
+
+  </body>
+</html>
