@@ -37,10 +37,13 @@ function addVideo(event)
                   console.log("Response", response);
                   alert("Video added Successfully!")
                 },
-                function(err) { console.error("Execute error", err); })
+                function(err) { console.error("Execute error", err);alert("Error!") })
     }
   }
-  console.log("Video Added");
+  alert("Video Add Failed: Playlist doesnt exists!")
+    
+  
+  // console.log("Video Added");
   
 }
   

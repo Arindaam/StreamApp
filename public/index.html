@@ -159,9 +159,10 @@ gapi.load("client:auth2", function() {
         .then(function(response) {
                 // Handle the results here (response.result has the parsed body).
                 console.log("Response", response);
+                alert("Playlist Added Successfully!")
                 
               },
-              function(err) { console.error("Execute error", err); });
+              function(err) { console.error("Execute error", err); alert("error")});
 
     
   };
