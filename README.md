@@ -1,4 +1,4 @@
-## Video Web App Using YouTube Data API v3
+## StreamApp Using YouTube Data API v3
 
 Ensure you have node v12.0+ and npm v6.0+ installed
 
