@@ -2,26 +2,8 @@ import React, { useState } from "react";
 import youtube from "./api";
 import { Grid } from "@material-ui/core";
 import { SearchBar, VideoList, VideoDetail } from "./components";
-
-
-
 // authenticate().then(loadClient());
-
-
-
-
-
-
 function App() {
-
-  
-  
- 
- 
-      
-
-  
-  
   const [videos, setVideos] = useState([]);
   const [selectedVideo, setSelectedVideo] = useState(null);
 
@@ -33,27 +15,16 @@ function App() {
         q: searchTerm,
         part: "snippet",
         maxResults: 5,
-        key: "AIzaSyAT9vFWEss_ZppI6SIwT0HObBJcsxEAUR8",
+        key: "AIzaSyCRvevVKgDMrmU9Y_HeLvLmQKbCrgUJUaA",
       },
     });
     setVideos(items);
-    setSelectedVideo(items[0]);
-
-    
+    setSelectedVideo(items[0]);    
   };
-
-
-
-  
-  
-
   const getSelectedVideo = (video) => {
     // console.log(video);
     setSelectedVideo(video);
-  };
-
-  
-  
+  };  
   return (
     <Grid container justify="center" spacing={10}>
       <Grid item xs={12}>
@@ -70,9 +41,6 @@ function App() {
         </Grid>
       </Grid>
     </Grid>
-
-
   );
 }
-
 export default App;
